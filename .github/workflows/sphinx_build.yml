@@ -22,6 +22,7 @@ jobs:
           pip install vcstool
       - name: Clone subrepos
         run: |
+          mkdir -p doc
           vcs import --input rolling.repos doc
       - name: Build documentation
         run: |
