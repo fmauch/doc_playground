@@ -1,3 +1,4 @@
+---
 name: "Build documentation"
 on:
   workflow_dispatch:
@@ -12,12 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-      - name: Clone subrepos
         with:
           cache: 'pip'
       - name: Install dependencies
         run: |
-          pip install -r requirements.py
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
           pip install vcstool
       - name: Clone subrepos
         run: |
@@ -25,3 +26,15 @@ jobs:
       - name: Build documentation
         run: |
           make html
+      - name: clone gh-pages branch
+        uses: actions/checkout@v4
+        if: ${{ success() && github.event_name != 'pull_request' && !env.ACT }}
+        with:
+          ref: gh-pages
+          path: gh-pages
+      - name: Deploy Pages
+        if: ${{ success() && github.event_name != 'pull_request' && !env.ACT }}
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_build/html
