@@ -1,0 +1,27 @@
+name: "Build documentation"
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - name: Clone subrepos
+        with:
+          cache: 'pip'
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.py
+          pip install vcstool
+      - name: Clone subrepos
+        run: |
+          vcs import --input rolling.repos doc
+      - name: Build documentation
+        run: |
+          make html

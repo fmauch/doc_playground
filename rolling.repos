@@ -1,0 +1,5 @@
+repositories:
+  ur_robot_driver:
+    type: git
+    url: git@github.com:UniversalRobots/Universal_Robots_ROS2_Driver.git
+    version: main
